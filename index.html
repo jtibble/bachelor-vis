@@ -24,7 +24,7 @@
     <p>
       Large nodes are leads (bachelors or bachelorettes) and smaller nodes are
       contestants. Bachelors are blue, bachelorettes are red. The bachelor with
-      lots of women is Matt James.
+      lots of women is Matt James. Most contestants aren't shown yet.
     </p>
     <p>
       This page is still very much a work-in-progress, so send your
@@ -110,7 +110,8 @@
         "Kendall Long",
         "Tia Booth",
         "Bekah Martinez",
-        BACHELORETTE_TAYSHA,
+        "Seinne Fleming",
+        "Jacqueline Trumbull",
       ].forEach((c) => {
         addFemaleContestant(c, BACHELOR_ARIE);
       });
@@ -270,16 +271,18 @@
 
         // Draw males
         context.beginPath();
+        context.strokeStyle = "#2086e0";
+        context.fillStyle = "#2086e0";
         nodes.filter((n) => n.sex === "male").forEach(drawNode);
         context.fill();
-        context.strokeStyle = "#00f";
         context.stroke();
 
         // Draw females
         context.beginPath();
+        context.strokeStyle = "#e02086";
+        context.fillStyle = "#e02086";
         nodes.filter((n) => n.sex === "female").forEach(drawNode);
         context.fill();
-        context.strokeStyle = "#f00";
         context.stroke();
         context.restore();
       }
