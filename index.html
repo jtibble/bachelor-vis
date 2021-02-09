@@ -24,16 +24,18 @@
     <p>
       Large nodes are leads (bachelors or bachelorettes) and smaller nodes are
       contestants. Bachelors are blue, bachelorettes are red. The bachelor with
-      lots of women is bachelor Matt James.
+      lots of women is Matt James.
     </p>
     <p>
-      Send comments/questions/feedback to me
-      <a href="https://github.com/jtibble/bachelor-vis/issues">on Github!</a>
+      This page is still very much a work-in-progress, so send your
+      comments/questions/feedback to me
+      <a href="https://github.com/jtibble/bachelor-vis/issues">on Github</a> or
+      <a href="https://twitter.com/jtibble">Twitter!</a>
     </p>
 
     <div class="row">
       <div class="col">
-        <canvas width="600px" height="600px"></canvas>
+        <canvas width="800px" height="600px"></canvas>
       </div>
     </div>
 
@@ -49,7 +51,7 @@
       const addNodeIfNotExisting = (name, sex, isLead) => {
         if (
           nodes.find((n) => {
-            return n.name === name;
+            return n.id === name;
           })
         ) {
           return;
@@ -68,13 +70,11 @@
 
       const addMaleContestant = (name, lead) => {
         addNodeIfNotExisting(name, "male", false);
-
         links.push({ source: name, target: lead });
       };
 
       const addFemaleContestant = (name, lead) => {
         addNodeIfNotExisting(name, "female", false);
-
         links.push({ source: name, target: lead });
       };
 
@@ -115,7 +115,17 @@
         addFemaleContestant(c, BACHELOR_ARIE);
       });
 
-      [HEATHER_MARTIN].forEach((c) => {
+      [
+        "Cassie Randolph",
+        "Hannah Godwin",
+        BACHELORETTE_TAYSHA,
+        "Caelynn Miller-Keys",
+        "Kirpa Sudick",
+        HEATHER_MARTIN,
+        BACHELORETTE_HANNAH,
+        "Katie Morton",
+        "Demi Burnett",
+      ].forEach((c) => {
         addFemaleContestant(c, BACHELOR_COLTON);
       });
 
@@ -153,10 +163,23 @@
       });
 
       // Bachelorette season 16 part 1 - Clare Crowley
-      ["Dale Moss", "Zac Clark", "Ben Smith"].forEach((c) => {
+      [
+        "Dale Moss",
+        "Zac Clark",
+        "Ben Smith",
+        "Ivan Hall",
+        "Brendan Morais",
+        "Bennett Jordan",
+      ].forEach((c) => {
         addMaleContestant(c, BACHELORETTE_CLARE);
       });
-      ["Dale Moss", "Zac Clark", "Ben Smith"].forEach((c) => {
+      [
+        "Zac Clark",
+        "Ben Smith",
+        "Ivan Hall",
+        "Brendan Morais",
+        "Bennett Jordan",
+      ].forEach((c) => {
         addMaleContestant(c, BACHELORETTE_TAYSHA);
       });
 
@@ -204,6 +227,7 @@
         addFemaleContestant(c, BACHELOR_MATT);
       });
 
+      // Friends
       addLink(TYLER_CAMERON, BACHELOR_MATT);
 
       var simulation = d3
@@ -232,7 +256,6 @@
       }
 
       simulation.nodes(nodes).on("tick", ticked);
-
       simulation.force("link").links(links);
 
       function ticked() {
@@ -258,13 +281,6 @@
         context.fill();
         context.strokeStyle = "#f00";
         context.stroke();
-
-        // context.beginPath();
-        // nodes.forEach(drawNode);
-        // context.fill();
-        // context.strokeStyle = "#fff";
-        // context.stroke();
-
         context.restore();
       }
     </script>
