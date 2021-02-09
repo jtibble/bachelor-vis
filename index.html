@@ -9,6 +9,10 @@
       integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
       crossorigin="anonymous"
     />
+    <script src="https://d3js.org/d3-dispatch.v2.min.js"></script>
+    <script src="https://d3js.org/d3-quadtree.v2.min.js"></script>
+    <script src="https://d3js.org/d3-timer.v2.min.js"></script>
+    <script src="https://d3js.org/d3-force.v2.min.js"></script>
   </head>
 
   <body>
@@ -18,8 +22,106 @@
       franchise over time, and their relationships.
     </p>
     <p>
+      Currently shows 3 bachelors (large circles): Colton, Peter, and Matt.
+      Heather Martin is the link between Colton and Matt
+    </p>
+    <p>
       Send comments/questions/feedback to me
       <a href="https://github.com/jtibble/bachelor-vis/issues">on Github!</a>
     </p>
+
+    <div class="row">
+      <div class="col">
+        <canvas width="600px" height="600px"></canvas>
+      </div>
+    </div>
+
+    <script type="module">
+      var canvas = document.querySelector("canvas"),
+        context = canvas.getContext("2d"),
+        width = canvas.width,
+        height = canvas.height;
+
+      const nodes = [];
+      const links = [];
+
+      const addLead = (name) => {
+        nodes.push({ id: name, isLead: true });
+      };
+
+      const addContestant = (name, leads) => {
+        nodes.push({ id: name });
+
+        if (Array.isArray(leads)) {
+          leads.forEach((l) => {
+            links.push({ source: name, target: l });
+          });
+        } else {
+          links.push({ source: name, target: leads });
+        }
+      };
+
+      const BACHELOR_23 = "Colton Underwood";
+      const BACHELOR_24 = "Peter Weber";
+      const BACHELOR_25 = "Matt James";
+
+      addLead(BACHELOR_23);
+      addLead(BACHELOR_24);
+      addLead(BACHELOR_25);
+      addContestant("Abigail Heringer", BACHELOR_25);
+      addContestant("Alana Milne", BACHELOR_25);
+      addContestant("Alicia Holloway", BACHELOR_25);
+      addContestant("Amber Andrews", BACHELOR_25);
+
+      addContestant("Heather Martin", [BACHELOR_23, BACHELOR_25]);
+
+      var simulation = d3
+        .forceSimulation()
+        .force("charge", d3.forceManyBody())
+        .force(
+          "link",
+          d3.forceLink().id(function (d) {
+            return d.id;
+          })
+        )
+        .force("center", d3.forceCenter());
+
+      function drawLink(d) {
+        context.moveTo(d.source.x, d.source.y);
+        context.lineTo(d.target.x, d.target.y);
+      }
+
+      function drawNode(d) {
+        context.moveTo(d.x + 3, d.y);
+        let radius = 3;
+        if (d.isLead) {
+          radius = 6;
+        }
+        context.arc(d.x, d.y, radius, 0, 2 * Math.PI);
+      }
+
+      simulation.nodes(nodes).on("tick", ticked);
+
+      simulation.force("link").links(links);
+
+      function ticked() {
+        context.clearRect(0, 0, width, height);
+        context.save();
+        context.translate(width / 2, height / 2 + 40);
+
+        context.beginPath();
+        links.forEach(drawLink);
+        context.strokeStyle = "#aaa";
+        context.stroke();
+
+        context.beginPath();
+        nodes.forEach(drawNode);
+        context.fill();
+        context.strokeStyle = "#fff";
+        context.stroke();
+
+        context.restore();
+      }
+    </script>
   </body>
 </html>
