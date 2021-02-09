@@ -22,8 +22,9 @@
       franchise over time, and their relationships.
     </p>
     <p>
-      Currently shows 3 bachelors (large circles): Colton, Peter, and Matt.
-      Heather Martin is the link between Colton and Matt
+      Large nodes are leads (bachelors or bachelorettes) and smaller nodes are
+      contestants. Bachelors are blue, bachelorettes are red. The bachelor with
+      lots of women is bachelor Matt James.
     </p>
     <p>
       Send comments/questions/feedback to me
@@ -45,35 +46,165 @@
       const nodes = [];
       const links = [];
 
-      const addLead = (name) => {
-        nodes.push({ id: name, isLead: true });
-      };
-
-      const addContestant = (name, leads) => {
-        nodes.push({ id: name });
-
-        if (Array.isArray(leads)) {
-          leads.forEach((l) => {
-            links.push({ source: name, target: l });
-          });
-        } else {
-          links.push({ source: name, target: leads });
+      const addNodeIfNotExisting = (name, sex, isLead) => {
+        if (
+          nodes.find((n) => {
+            return n.name === name;
+          })
+        ) {
+          return;
         }
+
+        nodes.push({ id: name, sex: sex, isLead: isLead });
       };
 
-      const BACHELOR_23 = "Colton Underwood";
-      const BACHELOR_24 = "Peter Weber";
-      const BACHELOR_25 = "Matt James";
+      const addBachelorLead = (name) => {
+        addNodeIfNotExisting(name, "male", true);
+      };
 
-      addLead(BACHELOR_23);
-      addLead(BACHELOR_24);
-      addLead(BACHELOR_25);
-      addContestant("Abigail Heringer", BACHELOR_25);
-      addContestant("Alana Milne", BACHELOR_25);
-      addContestant("Alicia Holloway", BACHELOR_25);
-      addContestant("Amber Andrews", BACHELOR_25);
+      const addBacheloretteLead = (name) => {
+        addNodeIfNotExisting(name, "female", true);
+      };
 
-      addContestant("Heather Martin", [BACHELOR_23, BACHELOR_25]);
+      const addMaleContestant = (name, lead) => {
+        addNodeIfNotExisting(name, "male", false);
+
+        links.push({ source: name, target: lead });
+      };
+
+      const addFemaleContestant = (name, lead) => {
+        addNodeIfNotExisting(name, "female", false);
+
+        links.push({ source: name, target: lead });
+      };
+
+      const addLink = (source, target) => {
+        links.push({ source: source, target: target });
+      };
+
+      const BACHELOR_ARIE = "Arie Luyendyk Jr";
+      const BACHELOR_COLTON = "Colton Underwood";
+      const BACHELOR_PETER = "Peter Weber";
+      const BACHELOR_MATT = "Matt James";
+
+      addBachelorLead(BACHELOR_ARIE);
+      addBachelorLead(BACHELOR_COLTON);
+      addBachelorLead(BACHELOR_PETER);
+      addBachelorLead(BACHELOR_MATT);
+
+      const BACHELORETTE_BECCA = "Becca Kufrin";
+      const BACHELORETTE_HANNAH = "Hannah Brown";
+      const BACHELORETTE_CLARE = "Clare Crowley";
+      const BACHELORETTE_TAYSHA = "Taysha Adams";
+      addBacheloretteLead(BACHELORETTE_BECCA);
+      addBacheloretteLead(BACHELORETTE_HANNAH);
+      addBacheloretteLead(BACHELORETTE_CLARE);
+      addBacheloretteLead(BACHELORETTE_TAYSHA);
+
+      const HEATHER_MARTIN = "Heather Martin";
+
+      // Bachelor season 22 - Arie
+      [
+        BACHELORETTE_BECCA,
+        "Lauren Burnham",
+        "Kendall Long",
+        "Tia Booth",
+        "Bekah Martinez",
+        BACHELORETTE_TAYSHA,
+      ].forEach((c) => {
+        addFemaleContestant(c, BACHELOR_ARIE);
+      });
+
+      [HEATHER_MARTIN].forEach((c) => {
+        addFemaleContestant(c, BACHELOR_COLTON);
+      });
+
+      // Bachelorette season 14 - Becca
+      [
+        "Garrett Yrigoyen",
+        "Blake Horstmann",
+        "Jason Tartick",
+        BACHELOR_COLTON,
+      ].forEach((c) => {
+        addMaleContestant(c, BACHELORETTE_BECCA);
+      });
+
+      const TYLER_CAMERON = "Tyler Cameron";
+
+      // Bachelorette season 15 - Hannah Brown
+      [
+        BACHELOR_PETER,
+        "Jed Wyatt",
+        TYLER_CAMERON,
+        "Luke Parker",
+        "Garrett Powell",
+      ].forEach((c) => {
+        addMaleContestant(c, BACHELORETTE_HANNAH);
+      });
+
+      [
+        "Hannah Sluss",
+        "Madison Prewett",
+        "Victoria Fuller",
+        "Kelsey Weier",
+        "Kelley Flanagan",
+      ].forEach((c) => {
+        addFemaleContestant(c, BACHELOR_PETER);
+      });
+
+      // Bachelorette season 16 part 1 - Clare Crowley
+      ["Dale Moss", "Zac Clark", "Ben Smith"].forEach((c) => {
+        addMaleContestant(c, BACHELORETTE_CLARE);
+      });
+      ["Dale Moss", "Zac Clark", "Ben Smith"].forEach((c) => {
+        addMaleContestant(c, BACHELORETTE_TAYSHA);
+      });
+
+      // Bachelor season 25 - Matt James
+      [
+        "Abigail Heringer",
+        "Alana Milne",
+        "Alicia Holloway",
+        "Amber Andrews",
+        "Anna Redman",
+        "Bri Springs",
+        "Brittany Galvin",
+        "Carolyn Vallejo",
+        "Casandra Suarez",
+        "Catalina Morales",
+        "Chelsea Vaughn",
+        "Corrinne Jones",
+        "Emani Curl",
+        "Illeana Pennotto",
+        "Jessenia Cruz",
+        "Kaili Anderson",
+        "Katie Thurston",
+        "Khaylah Epps",
+        "Kimberly Li",
+        "Kimberly Courneya",
+        "Kit Keenan",
+        "Kristin Hopkins",
+        "Lauren Maddox",
+        "Mearg Tareke",
+        "Mariela Pepin",
+        "Marylynn Sienna",
+        "Michelle Young",
+        "Meredith Snyder",
+        "Pieper James",
+        "Rachael Kirkconnell",
+        "Ryan Claytor",
+        "Saneh Ste. Claire",
+        "Sarah Trott",
+        "Serena Chew",
+        "Serena Pitt",
+        "Sydney Johnson",
+        "Victoria Larson",
+        HEATHER_MARTIN, // Added halfway through
+      ].forEach((c) => {
+        addFemaleContestant(c, BACHELOR_MATT);
+      });
+
+      addLink(TYLER_CAMERON, BACHELOR_MATT);
 
       var simulation = d3
         .forceSimulation()
@@ -95,7 +226,7 @@
         context.moveTo(d.x + 3, d.y);
         let radius = 3;
         if (d.isLead) {
-          radius = 6;
+          radius = 10;
         }
         context.arc(d.x, d.y, radius, 0, 2 * Math.PI);
       }
@@ -114,11 +245,25 @@
         context.strokeStyle = "#aaa";
         context.stroke();
 
+        // Draw males
         context.beginPath();
-        nodes.forEach(drawNode);
+        nodes.filter((n) => n.sex === "male").forEach(drawNode);
         context.fill();
-        context.strokeStyle = "#fff";
+        context.strokeStyle = "#00f";
         context.stroke();
+
+        // Draw females
+        context.beginPath();
+        nodes.filter((n) => n.sex === "female").forEach(drawNode);
+        context.fill();
+        context.strokeStyle = "#f00";
+        context.stroke();
+
+        // context.beginPath();
+        // nodes.forEach(drawNode);
+        // context.fill();
+        // context.strokeStyle = "#fff";
+        // context.stroke();
 
         context.restore();
       }
